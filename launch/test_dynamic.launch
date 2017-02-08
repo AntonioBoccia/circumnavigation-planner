@@ -1,0 +1,92 @@
+<launch>
+
+
+  <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+
+
+  <group ns='agent1'>
+
+    <rosparam param='node_name'>
+      'agent1'
+    </rosparam>
+
+    <rosparam param='initial_position'>
+      [1.0, 3.0]
+    </rosparam>
+
+    <rosparam param='initial_estimate'>
+      [0.8, 1.2]
+    </rosparam>
+
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+  
+
+    <node name='vehicle_simulator'
+      pkg='dynamic_network_estimate'
+      type='vehicle_simulator.py'/>
+
+    <node name='dynamic_planner_add'
+      pkg='dynamic_network_estimate'
+      type='dynamic_planner_add.py'
+      output='screen'/>
+
+    <node name='estimate'
+      pkg='dynamic_network_estimate'
+      type='estimate.py'/>
+
+    <node name='sensor_simulator'
+      pkg='dynamic_network_estimate'
+      type='sensor_simulator.py'/>
+
+  </group>
+
+<group ns='agent2'>
+
+    <rosparam param='node_name'>
+      'agent2'
+    </rosparam>
+  
+    <rosparam param='initial_position'>
+      [3.0, 0.0]
+    </rosparam>
+
+    <rosparam param='initial_estimate'>
+      [0.7, 1.1]
+    </rosparam>
+
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+  
+
+    <node name='vehicle_simulator'
+      pkg='dynamic_network_estimate'
+      type='vehicle_simulator.py'/>
+
+    <node name='dynamic_planner_add'
+      pkg='dynamic_network_estimate'
+      type='dynamic_planner_add.py'
+      output='screen'/>
+
+    <node name='estimate'
+      pkg='dynamic_network_estimate'
+      type='estimate.py'/>
+
+    <node name='sensor_simulator'
+      pkg='dynamic_network_estimate'
+      type='sensor_simulator.py'/>
+
+  </group>
+    <node name='cloud'
+      pkg='dynamic_network_estimate'
+      type='cloud.py'/>
+
+    <node name='plotter'
+      pkg='dynamic_network_estimate'
+      type='plotter.py'/>
+
+</launch>
