@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(circumnavigation-planner)
+project(dynamic_network_estimate)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  geomtwo
+  roscpp
   rospy
   std_msgs
   message_generation
@@ -19,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-catkin_python_setup()
+# catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -53,12 +52,11 @@ catkin_python_setup()
 # )
 
 ## Generate services in the 'srv' folder
-#add_service_files(
-#    FILES
-#   Service1.srv
-#   Service2.srv
-#   UpdateEstimate.srv
-#)
+ add_service_files(
+   FILES
+   addAgent.srv
+   AddAgent.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -68,9 +66,9 @@ catkin_python_setup()
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  geomtwo
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
 )
 
 ################################################
@@ -104,13 +102,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES plantrack
-   CATKIN_DEPENDS
-    geometry_msgs
-    geomtwo
-    rospy
-    std_msgs
-    message_runtime
+#  LIBRARIES dynamic_network_estimate
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -126,24 +119,24 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(plantrack
-#   src/${PROJECT_NAME}/plantrack.cpp
+# add_library(dynamic_network_estimate
+#   src/${PROJECT_NAME}/dynamic_network_estimate.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(plantrack ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(dynamic_network_estimate ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(plantrack_node src/plantrack_node.cpp)
+# add_executable(dynamic_network_estimate_node src/dynamic_network_estimate_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(plantrack_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(dynamic_network_estimate_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(plantrack_node
+# target_link_libraries(dynamic_network_estimate_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -162,7 +155,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS plantrack plantrack_node
+# install(TARGETS dynamic_network_estimate dynamic_network_estimate_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -187,7 +180,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_plantrack.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_dynamic_network_estimate.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
