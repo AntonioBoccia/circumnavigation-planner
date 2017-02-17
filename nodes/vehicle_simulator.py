@@ -23,7 +23,7 @@ YMAX = rp.get_param('ymax')
 
 rp.init_node('integrator')
 
-FREQUENCY = 10e1
+FREQUENCY=rp.get_param('rate')
 RATE = rp.Rate(FREQUENCY)
 TIME_STEP = 1.0/FREQUENCY
 

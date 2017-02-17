@@ -5,20 +5,25 @@ import geomtwo.msg as gms
 import std_msgs.msg as sms
 import threading as thd
 import numpy as np
+import geometry_msgs.msg as gm
 
 #Paramaters
 estimate_gain=rp.get_param('estimate_gain') #from the .yaml file
+TARGET_POSITION = np.array(rp.get_param('target_position')) #from the .yaml file
 #Initial estimate
 estimate=np.array(rp.get_param('initial_estimate')) #from the .launch file
 position=None
 bearing_measurement=None
+error=0
 #Lock
 LOCK=thd.Lock();
 
 
 rp.init_node('estimate')
 
-FREQUENCY = 10e1
+# Frequency
+FREQUENCY=rp.get_param('rate')
+
 RATE = rp.Rate(FREQUENCY)
 TIME_STEP = 1.0/FREQUENCY #Integration step
 
@@ -51,7 +56,11 @@ estimate_pub = rp.Publisher(
     name='estimate',
     data_class=gms.Point,
     queue_size=10)
-
+#Error norm publisher
+error_pub = rp.Publisher(
+    name='error',
+    data_class=gm.PointStamped,
+    queue_size=10)
 
 start = False
 while not rp.is_shutdown() and not start:
@@ -71,8 +80,18 @@ while not rp.is_shutdown():
     #rp.logwarn(d_estimate)
     #Integration
     estimate= estimate+d_estimate*TIME_STEP
+    # Error norm 
+    error=np.linalg.norm(TARGET_POSITION-estimate)
     LOCK.release()
     #Estimate publishing
     #rp.logwarn(estimate)
     estimate_pub.publish(gms.Point(x=estimate[0], y=estimate[1]))
+    #Error norm publishing
+    error_msg=gm.PointStamped()
+    error_msg.header.seq=0
+    error_msg.header.stamp = rp.Time.now()
+    error_msg.point.x=error
+    error_msg.point.y=0
+    error_msg.point.z=0
+    error_pub.publish(error_msg)
     RATE.sleep()
