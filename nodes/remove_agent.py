@@ -4,7 +4,7 @@ import rospy as rp
 import geomtwo.msg as gms
 import threading as thd
 import numpy as np
-import dynamic_network_estimate.srv as dns
+import circumnavigation_moving_target.srv as dns
 
 
 delay=rp.get_param('delay')

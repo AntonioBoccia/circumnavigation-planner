@@ -7,7 +7,7 @@ import threading as thd
 import numpy as np
 import math
 import copy as cp
-import dynamic_network_estimate.srv as dns
+import circumnavigation_moving_target.srv as dns
 import geometry_msgs.msg as gm
 
 # Variables
@@ -19,15 +19,9 @@ bearing_measurement = None
 bearing_measurement_new=None
 
 
-
-# Rate
-rate=rp.get_param('rate')
-
 # Parameters
 DESIRED_DISTANCE = rp.get_param('desired_distance')  # from the .yaml file
 alpha= rp.get_param('alpha') # from the .yaml file
-k_fi= rp.get_param('k_fi') # from the .yaml file
-k_d= rp.get_param('k_d') # from the .yaml file
 
 node_name=rp.get_param('node_name')
 delay=rp.get_param('delay')
@@ -91,7 +85,6 @@ def remove_agent_handler(req):
 
 rp.Service('RemoveAgent', dns.RemoveAgent, remove_agent_handler)
 
-
 # Call to the service "AddMe": the agent requires to the cloud to add his name
 rp.wait_for_service('/AddMe')
 add_me_proxy=rp.ServiceProxy('/AddMe', dns.AddAgent)
@@ -140,7 +133,7 @@ rp.Subscriber(
     callback=estimate_callback,
     queue_size=10)
 
-RATE = rp.Rate(rate)
+RATE = rp.Rate(150.0)
 start = False
 
 #Publishers
@@ -180,7 +173,7 @@ while not rp.is_shutdown():
         beta=min(agent_beta)
     #Control law
     est_dist = np.linalg.norm(estimate-position)
-    vel = k_d*bearing_measurement*(est_dist-DESIRED_DISTANCE)+k_fi*est_dist*phi_bar*(alpha+beta)
+    vel = 2*bearing_measurement*(est_dist-DESIRED_DISTANCE)+0.3*est_dist*phi_bar*(alpha+beta)
     #Velocity message
     cmdvel_msg = gms.Vector(x=vel[0], y=vel[1])
     #Beta message

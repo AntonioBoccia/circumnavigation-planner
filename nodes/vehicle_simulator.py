@@ -8,6 +8,7 @@ import threading as thd
 import numpy as np
 
 
+
 LOCK = thd.Lock()
 #Initial position
 position = np.array(rp.get_param('initial_position'))
@@ -23,7 +24,7 @@ YMAX = rp.get_param('ymax')
 
 rp.init_node('integrator')
 
-FREQUENCY=rp.get_param('rate')
+FREQUENCY = 15e1
 RATE = rp.Rate(FREQUENCY)
 TIME_STEP = 1.0/FREQUENCY
 
@@ -58,6 +59,7 @@ while not rp.is_shutdown():
     LOCK.acquire()
     #Integration
     position = position+velocity*TIME_STEP
+    #rp.logwarn(position)
     LOCK.release()
     #Position publishing
     pub.publish(gms.Point(x=position[0], y=position[1]))

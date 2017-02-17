@@ -8,11 +8,11 @@ import numpy as np
 import geometry_msgs.msg as gm
 
 
+
 rp.init_node('sensor_simulator')
 
 position = None
-distance = 0
-TARGET_POSITION = np.array(rp.get_param('target_position')) #from the .yaml file
+target_position=None
 
 LOCK = thd.Lock()
 
@@ -28,12 +28,21 @@ rp.Subscriber(
     callback=position_callback,
     queue_size=10)
 
-# Rate
-rate=rp.get_param('rate')
-RATE = rp.Rate(rate)
+def target_position_callback(msg):
+    global target_position
+    LOCK.acquire()
+    target_position = np.array([msg.x, msg.y])
+    LOCK.release()
+rp.Subscriber(
+    name='target_position',
+    data_class=gms.Point,
+    callback=target_position_callback,
+    queue_size=10)
 
+
+RATE = rp.Rate(150.0)
 start = False
-#Publisher
+#Publishers
 bearing_pub = rp.Publisher(
     name='bearing_measurement',
     data_class=gms.Vector,
@@ -45,17 +54,20 @@ distance_pub = rp.Publisher(
 
 while not rp.is_shutdown() and not start:
     LOCK.acquire()
-    if not position is None:
-        start = True
+    if all([not data is None for data in [ position , target_position ]]):
+           start = True
     #else:
-        #rp.logwarn('waiting for position')
+        #rp.logwarn('waiting for measurements')
     LOCK.release()
     RATE.sleep()
+
 while not rp.is_shutdown():
     LOCK.acquire()
     #Bearing vector (phi)
-    bearing = (TARGET_POSITION-position)/np.linalg.norm(TARGET_POSITION-position)
-    distance=np.linalg.norm(TARGET_POSITION-position)
+    bearing = (target_position-position)/np.linalg.norm(target_position-position)
+    #rp.logwarn(bearing)
+    if not target_position is None:
+        distance=np.linalg.norm(target_position-position)
     #Bearing vector publishing
     bearing_msg = gms.Vector(*bearing)
     bearing_pub.publish(bearing_msg)

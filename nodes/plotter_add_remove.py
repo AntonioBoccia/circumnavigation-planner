@@ -6,10 +6,10 @@ import geomtwo.msg as gms
 import threading as thd
 import copy as cp
 
+import numpy as np
 import matplotlib.pyplot as plt
 
-import dynamic_network_estimate.srv as dns
-
+import circumnavigation_moving_target.srv as dns
 rp.init_node('plotter')
 
 
@@ -20,33 +20,26 @@ TARGET_COLOR = rp.get_param('target_color','black')
 
 #AGENT_NAMES = rp.get_param('agent_names').split()
 agent_names=[]
-TARGET_POSITION = rp.get_param('target_position')
+target_position = rp.get_param('target_initial_position')
 
-# Rate
-rate=rp.get_param('rate')
-RATE = rp.Rate(rate)
+RATE = rp.Rate(15e1)
 
 LOCK = thd.Lock()
 
 plt.ion()
 plt.figure()
-plt.scatter(*TARGET_POSITION, color=TARGET_COLOR)
+#plt.scatter(*TARGET_POSITION, color=TARGET_COLOR)
 plt.axis('equal')
 plt.grid(True)
 plt.draw()
 
-#agent_positions = {name: None for name in AGENT_NAMES}
-#agent_artists = {name: None for name in AGENT_NAMES}
-
-#estimates = {name: None for name in AGENT_NAMES}
-#estimate_artists = {name: None for name in AGENT_NAMES}
 agent_positions={}
 agent_artists={}
 
 agent_estimates={}
 estimate_artists={}
 
-# Service Handle
+# Service Handlers
 def add_agent_artist_handler(req):
     rp.Subscriber(
         name='/'+req.name+'/position',
@@ -90,44 +83,32 @@ rp.Service('RemoveAgentArtist', dns.RemoveAgent, remove_agent_artist_handler)
 
 
 
-
-
-
+# Subscribers
 def agent_callback(msg, name):
     global agent_positions
     LOCK.acquire()
     agent_positions[name] = [msg.x, msg.y]
     LOCK.release()
-# for name in agent_names:
-#     rp.Subscriber(
-#         name=name+'/position',
-#         data_class=gms.Point,
-#         callback=agent_callback,
-#         callback_args=name,
-#         queue_size=1)
 
 def estimate_callback(msg, name):
     global agent_estimates
     LOCK.acquire()
     agent_estimates[name] = [msg.x, msg.y]
     LOCK.release()
-# for name in agent_names:
-#     rp.Subscriber(
-#         name=name+'/estimate',
-#         data_class=gms.Point,
-#         callback=estimate_callback,
-#         callback_args=name,
-#         queue_size=1)
 
-# def estimate_callback(msg):
-#     global estimate
-#     LOCK.acquire()
-#     estimate = [msg.x, msg.y]
-#     LOCK.release()
-# rp.Subscriber(name='estimate',
-#               data_class=gms.Point,
-#               callback=estimate_callback)
+def target_position_callback(msg):
+    global target_position
+    LOCK.acquire()
+    target_position=np.array([msg.x,msg.y])
+    LOCK.release()
+rp.Subscriber(
+    name='target_position',
+    data_class=gms.Point,
+    callback=target_position_callback,
+    queue_size=10)
 
+
+# Main
 while not rp.is_shutdown():
     ag_pos = {}
     est = {}
@@ -150,5 +131,8 @@ while not rp.is_shutdown():
             if not estimate_artists[name] is None:
                 estimate_artists[name].remove()
             estimate_artists[name] = plt.scatter(*est[name], color=ESTIMATE_COLOR)
+    LOCK.acquire()
+    plt.scatter(*target_position, color=TARGET_COLOR)
+    LOCK.release()
     plt.draw()
     RATE.sleep()

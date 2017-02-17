@@ -7,12 +7,11 @@ import threading as thd
 import numpy as np
 import math
 import copy as cp
-import dynamic_network_estimate.srv as dns
+import circumnavigation_moving_target.srv as dns
 
 agent_names=[]
 add_agent_proxies={}
 remove_agent_proxies={}
-remove_me_proxies={}
 LOCK=thd.Lock()
 
 rp.wait_for_service('AddAgentArtist')
@@ -45,8 +44,8 @@ def remove_handler(req):
     for name in agent_names:
         remove_agent_proxies[name].call(req.name)
         remove_agent_proxies[req.name].call(name)
-    del remove_agent_proxies[req.name]
     LOCK.release()
+    del remove_agent_proxies[req.name]
     plotter_proxy_remove.call(req.name)
     return dns.RemoveAgentResponse()   
 

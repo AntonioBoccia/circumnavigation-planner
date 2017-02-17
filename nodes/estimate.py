@@ -9,21 +9,18 @@ import geometry_msgs.msg as gm
 
 #Paramaters
 estimate_gain=rp.get_param('estimate_gain') #from the .yaml file
-TARGET_POSITION = np.array(rp.get_param('target_position')) #from the .yaml file
 #Initial estimate
 estimate=np.array(rp.get_param('initial_estimate')) #from the .launch file
 position=None
 bearing_measurement=None
-error=0
+target_position=None
 #Lock
 LOCK=thd.Lock();
 
 
 rp.init_node('estimate')
 
-# Frequency
-FREQUENCY=rp.get_param('rate')
-
+FREQUENCY = 15e1
 RATE = rp.Rate(FREQUENCY)
 TIME_STEP = 1.0/FREQUENCY #Integration step
 
@@ -51,6 +48,18 @@ rp.Subscriber(
     callback=bearing_measurement_callback,
     queue_size=10)
 
+def target_position_callback(msg):
+    global target_position
+    LOCK.acquire()
+    target_position = np.array([msg.x, msg.y])
+    LOCK.release()
+rp.Subscriber(
+    name='target_position',
+    data_class=gms.Point,
+    callback=target_position_callback,
+    queue_size=10)
+
+
 #Publisher
 estimate_pub = rp.Publisher(
     name='estimate',
@@ -77,15 +86,12 @@ while not rp.is_shutdown():
     LOCK.acquire()
     #Estimate algorithm
     d_estimate=-estimate_gain*(np.eye(2)-np.outer(bearing_measurement,bearing_measurement)).dot(estimate-position)
-    #rp.logwarn(d_estimate)
     #Integration
     estimate= estimate+d_estimate*TIME_STEP
     # Error norm 
-    error=np.linalg.norm(TARGET_POSITION-estimate)
+    if not target_position is None:
+        error=np.linalg.norm(target_position-estimate)    
     LOCK.release()
-    #Estimate publishing
-    #rp.logwarn(estimate)
-    estimate_pub.publish(gms.Point(x=estimate[0], y=estimate[1]))
     #Error norm publishing
     error_msg=gm.PointStamped()
     error_msg.header.seq=0
@@ -94,4 +100,6 @@ while not rp.is_shutdown():
     error_msg.point.y=0
     error_msg.point.z=0
     error_pub.publish(error_msg)
+    #Estimate publishing
+    estimate_pub.publish(gms.Point(x=estimate[0], y=estimate[1]))
     RATE.sleep()
