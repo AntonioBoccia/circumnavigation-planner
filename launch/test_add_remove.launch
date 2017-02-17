@@ -1,0 +1,199 @@
+<launch>
+
+
+  <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+
+  
+  
+  <group ns='agent1'>
+
+
+    <param name='rate' type='double' value='100.0'/>
+
+    <rosparam param='node_name'>
+      'agent1'
+    </rosparam>
+
+    <param name='delay' type='double' value='2.0'/>
+
+    <rosparam param='initial_position'>
+      [1.0, 3.0]
+    </rosparam>
+
+    <rosparam param='initial_estimate'>
+      [0.8, 1.2]
+    </rosparam>
+
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+  
+
+    <node name='vehicle_simulator'
+      pkg='dynamic_network_estimate'
+      type='vehicle_simulator.py'/>
+
+    <node name='dynamic_planner_add_remove'
+      pkg='dynamic_network_estimate'
+      type='dynamic_planner_add_remove.py'
+      output='screen'/>
+
+    <node name='estimate'
+      pkg='dynamic_network_estimate'
+      type='estimate.py'/>
+
+    <node name='sensor_simulator'
+      pkg='dynamic_network_estimate'
+      type='sensor_simulator.py'/>
+
+  </group>
+
+<group ns='agent2'>
+
+	<param name='rate' type='double' value='100.0'/>
+
+    <rosparam param='node_name'>
+      'agent2'
+    </rosparam>
+
+    <param name='delay' type='double' value='5.0'/>
+  
+    <rosparam param='initial_position'>
+      [3.0, 0.0]
+    </rosparam>
+
+    <rosparam param='initial_estimate'>
+      [0.7, 1.1]
+    </rosparam>
+
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+  
+
+    <node name='vehicle_simulator'
+      pkg='dynamic_network_estimate'
+      type='vehicle_simulator.py'/>
+
+    <node name='dynamic_planner_add_remove'
+      pkg='dynamic_network_estimate'
+      type='dynamic_planner_add_remove.py'/>
+
+    <node name='estimate'
+      pkg='dynamic_network_estimate'
+      type='estimate.py'/>
+
+    <node name='sensor_simulator'
+      pkg='dynamic_network_estimate'
+      type='sensor_simulator.py'/>
+
+  </group>
+
+<group ns='agent3'>
+
+	<param name='rate' type='double' value='100.0'/>
+
+    <rosparam param='node_name'>
+      'agent3'
+    </rosparam>
+  
+    <param name='delay' type='double' value='40.0'/>
+
+    <rosparam param='initial_position'>
+      [0.0, 0.0]
+    </rosparam>
+
+    <rosparam param='initial_estimate'>
+      [0.6, 1.0]
+    </rosparam>
+
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+  
+
+    <node name='vehicle_simulator'
+      pkg='dynamic_network_estimate'
+      type='vehicle_simulator.py'/>
+
+    <node name='dynamic_planner_add_remove'
+      pkg='dynamic_network_estimate'
+      type='dynamic_planner_add_remove.py'/>
+
+    <node name='estimate'
+      pkg='dynamic_network_estimate'
+      type='estimate.py'/>
+
+    <node name='sensor_simulator'
+      pkg='dynamic_network_estimate'
+      type='sensor_simulator.py'/>
+
+  </group>
+
+  <group ns='agent4'>
+
+  	<param name='rate' type='double' value='100.0'/>
+
+    <rosparam param='node_name'>
+      'agent4'
+    </rosparam>
+  
+    <param name='delay' type='double' value='80.0'/>
+
+    <rosparam param='initial_position'>
+      [5.0, 0.0]
+    </rosparam>
+
+    <rosparam param='initial_estimate'>
+      [0.7, 1.1]
+    </rosparam>
+
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+  
+
+    <node name='vehicle_simulator'
+      pkg='dynamic_network_estimate'
+      type='vehicle_simulator.py'/>
+
+    <node name='dynamic_planner_add_remove'
+      pkg='dynamic_network_estimate'
+      type='dynamic_planner_add_remove.py'/>
+
+    <node name='estimate'
+      pkg='dynamic_network_estimate'
+      type='estimate.py'/>
+
+    <node name='sensor_simulator'
+      pkg='dynamic_network_estimate'
+      type='sensor_simulator.py'/>
+
+  </group>
+
+  
+    <param name='delay' type='double' value='100.0'/>
+    <param name='agent_to_remove' type='str' value='agent2'/>
+    
+    <node name='remove_agent'
+      pkg='dynamic_network_estimate'
+      type='remove_agent.py'
+      output='screen'/>
+
+
+    <node name='cloud_add_remove'
+      pkg='dynamic_network_estimate'
+      type='cloud_add_remove.py'
+      output='screen'/>
+
+    <param name='rate' type='double' value='100.0'/>
+    
+    <node name='plotter_add_remove'
+      pkg='dynamic_network_estimate'
+      type='plotter_add_remove.py'/>
+
+</launch>
