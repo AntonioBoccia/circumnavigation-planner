@@ -1,20 +1,16 @@
 <launch>
 
 
-  <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
+  <rosparam command='load' file='$(find circumnavigation_moving_target)/param/target.yaml'/>
 
-  
-  
+
   <group ns='agent1'>
-
-
-    <param name='rate' type='double' value='100.0'/>
 
     <rosparam param='node_name'>
       'agent1'
     </rosparam>
 
-    <param name='delay' type='double' value='2.0'/>
+    <param name='delay' type='double' value='0.0'/>
 
     <rosparam param='initial_position'>
       [1.0, 3.0]
@@ -24,40 +20,40 @@
       [0.8, 1.2]
     </rosparam>
 
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/target.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/planner.yaml'/>
+
+    <remap from='target_position' to='/target/target_position'/>
   
 
     <node name='vehicle_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='vehicle_simulator.py'/>
 
     <node name='dynamic_planner_add_remove'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='dynamic_planner_add_remove.py'
       output='screen'/>
 
     <node name='estimate'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='estimate.py'/>
 
     <node name='sensor_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='sensor_simulator.py'/>
 
   </group>
 
 <group ns='agent2'>
 
-	<param name='rate' type='double' value='100.0'/>
-
     <rosparam param='node_name'>
       'agent2'
     </rosparam>
 
-    <param name='delay' type='double' value='5.0'/>
+    <param name='delay' type='double' value='2.0'/>
   
     <rosparam param='initial_position'>
       [3.0, 0.0]
@@ -67,39 +63,39 @@
       [0.7, 1.1]
     </rosparam>
 
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/target.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/planner.yaml'/>
+
+    <remap from='target_position' to='/target/target_position'/>
   
 
     <node name='vehicle_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='vehicle_simulator.py'/>
 
     <node name='dynamic_planner_add_remove'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='dynamic_planner_add_remove.py'/>
 
     <node name='estimate'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='estimate.py'/>
 
     <node name='sensor_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='sensor_simulator.py'/>
 
   </group>
 
 <group ns='agent3'>
 
-	<param name='rate' type='double' value='100.0'/>
-
     <rosparam param='node_name'>
       'agent3'
     </rosparam>
   
-    <param name='delay' type='double' value='40.0'/>
+    <param name='delay' type='double' value='15.0'/>
 
     <rosparam param='initial_position'>
       [0.0, 0.0]
@@ -109,39 +105,40 @@
       [0.6, 1.0]
     </rosparam>
 
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/target.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/planner.yaml'/>
   
 
+    <remap from='target_position' to='/target/target_position'/>
+
+
     <node name='vehicle_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='vehicle_simulator.py'/>
 
     <node name='dynamic_planner_add_remove'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='dynamic_planner_add_remove.py'/>
 
     <node name='estimate'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='estimate.py'/>
 
     <node name='sensor_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='sensor_simulator.py'/>
 
   </group>
 
   <group ns='agent4'>
 
-  	<param name='rate' type='double' value='100.0'/>
-
     <rosparam param='node_name'>
       'agent4'
     </rosparam>
   
-    <param name='delay' type='double' value='80.0'/>
+    <param name='delay' type='double' value='40.0'/>
 
     <rosparam param='initial_position'>
       [5.0, 0.0]
@@ -151,49 +148,68 @@
       [0.7, 1.1]
     </rosparam>
 
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/target.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/estimate.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/simulator.yaml'/>
-    <rosparam command='load' file='$(find dynamic_network_estimate)/param/planner.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/target.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/estimate.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/simulator.yaml'/>
+    <rosparam command='load' file='$(find circumnavigation_moving_target)/param/planner.yaml'/>
   
+    <remap from='target_position' to='/target/target_position'/>
 
     <node name='vehicle_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='vehicle_simulator.py'/>
 
     <node name='dynamic_planner_add_remove'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='dynamic_planner_add_remove.py'/>
 
     <node name='estimate'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='estimate.py'/>
 
     <node name='sensor_simulator'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='sensor_simulator.py'/>
 
   </group>
 
+
   
-    <param name='delay' type='double' value='100.0'/>
+  <group ns='target'>
+
+    <rosparam param='target_initial_position'>
+      [0.0, 0.1]
+    </rosparam>
+
+     <node name='target'
+      pkg='circumnavigation_moving_target'
+      type='target.py'/>
+
+  </group>
+
+  
+    <param name='delay' type='double' value='80.0'/>
     <param name='agent_to_remove' type='str' value='agent2'/>
     
     <node name='remove_agent'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='remove_agent.py'
       output='screen'/>
 
 
     <node name='cloud_add_remove'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='cloud_add_remove.py'
       output='screen'/>
 
-    <param name='rate' type='double' value='100.0'/>
     
+    <rosparam param='target_initial_position'>
+      [0.0, 0.1]
+    </rosparam>
+    <remap from='target_position' to='/target/target_position'/>
+
     <node name='plotter_add_remove'
-      pkg='dynamic_network_estimate'
+      pkg='circumnavigation_moving_target'
       type='plotter_add_remove.py'/>
 
 </launch>
